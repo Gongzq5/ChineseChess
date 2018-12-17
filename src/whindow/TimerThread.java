@@ -35,12 +35,12 @@ public class TimerThread extends Thread{
 				if (30 - (System.currentTimeMillis() - oldTime) / 1000 <= 5){
 					desLabel.setForeground(Color.red);
 				}
-				else{
+				else {
 					desLabel.setForeground(Color.black);
 				}
 				desLabel.setText(String.valueOf(30 - (System.currentTimeMillis() - oldTime) / 1000));
 			}
-			else{
+			else {
 				desLabel.setText("");
 			}
 		}

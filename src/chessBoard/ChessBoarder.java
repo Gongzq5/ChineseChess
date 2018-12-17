@@ -4,7 +4,7 @@ import java.awt.Point;
 
 import whindow.ChineseChessMainFrame;
 
-public class ChessBoarder {
+public class ChessBoarder implements Cloneable {
 	/*
 	 * 9列10行的棋子数组
 	 * null表示当前位置棋盘没有棋子
@@ -15,7 +15,8 @@ public class ChessBoarder {
 	public Point p1;
 	public Point p2;
 	String [][] StrPos = {{"1","2","3","4","5","6","7","8","9"},
-			{"九","八","七","六","五","四","三","二","一"}};
+						  {"九","八","七","六","五","四","三","二","一"}};
+	public String informations = "";
 	
 	/**
 	 * 初始化棋盘
@@ -87,6 +88,19 @@ public class ChessBoarder {
 		MyPieces[7][7] = new ChessPieces(10);
 		
 	}
+	
+	@Override
+	public ChessBoarder clone() {
+		ChessBoarder newChessBoarder = new ChessBoarder();
+		for (int i = 0; i < MyPieces.length; i++) {
+			newChessBoarder.MyPieces[i] = this.MyPieces[i].clone();
+		}
+		newChessBoarder.p1 = this.p1 == null ? null : new Point(this.p1);
+		newChessBoarder.p2 = this.p2 == null ? null : new Point(this.p2);
+		newChessBoarder.StrPos = this.StrPos.clone();
+		return newChessBoarder;
+	}
+	
 	/**
 	 * 棋子移动
 	 * @param src 原位置
@@ -96,329 +110,14 @@ public class ChessBoarder {
 	 * 时间：20141118
 	 */
 	public boolean PieceMove(Point src,Point des){
-		//test
-		/*
-		MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-		MyPieces[src.y][src.x] = null;
-		*/
-		
-		if (MyPieces[src.y][src.x] == null){
-			//源位置没有棋子，移动失败
+		if (canMove(src, des)) {
+			MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
+			MyPieces[src.y][src.x] = null; 
+			return true;
+		} else {
 			return false;
 		}
-		else{
-			//有棋子
-			switch(MyPieces[src.y][src.x].name.charAt(1)){
-			case '将':
-				//判断是否在九宫内
-				if (des.x >= 3 && des.x <= 5 && des.y >= 0 && des.y <= 2){
-					if (Distance(src,des) == 1){
-						//行走步数为1步
-						//输出走子信息
-						if (src.y == des.y){
-							ChineseChessMainFrame.InfBoard.AddLog("将" + StrPos[0][src.x] + "平" + StrPos[0][des.x]);
-						}
-						else{
-							ChineseChessMainFrame.InfBoard.AddLog("将" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + 1) ;
-						}
-						MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-						MyPieces[src.y][src.x] = null; 
-						
-						return true;
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			case '帅':
-				//判断是否在九宫内
-				if (des.x >= 3 && des.x <= 5 && des.y >= 7 && des.y <= 9){
-					if (Distance(src,des) == 1){
-						//行走步数为1步
-						//输出走子信息
-						if (src.y == des.y){
-							ChineseChessMainFrame.InfBoard.AddLog("帅" + StrPos[1][src.x] + "平" + StrPos[1][des.x]);
-						}
-						else{
-							ChineseChessMainFrame.InfBoard.AddLog("帅" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + 1) ;
-						}
-						MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-						MyPieces[src.y][src.x] = null; 
-						return true;
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			case '士':
-				//判断是否是红方
-				if (MyPieces[src.y][src.x].name.charAt(0) == '红'){
-					//判断是否在九宫内
-					if (des.x >= 3 && des.x <= 5 && des.y >= 7 && des.y <= 9){
-						//判断是否是斜着走
-						if (Distance(src,des) > 1.4 && Distance(src,des) < 1.5){
-							//输出走子信息
-							ChineseChessMainFrame.InfBoard.AddLog("士" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ) ;
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					//判断是否在九宫内
-					if (des.x >= 3 && des.x <= 5 && des.y >= 0 && des.y <= 2){
-						//判断是否是斜着走
-						if (Distance(src,des) > 1.4 && Distance(src,des) < 1.5){
-							//输出走子信息
-							ChineseChessMainFrame.InfBoard.AddLog("士" + StrPos[1][src.x] + (des.y > src.y ? "进" : "退") +StrPos[1][des.x] ) ;
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-				}
-			case '象':
-				//判断是否没过河
-				if (des.y <= 4 ){
-					//判断是否斜走2格
-					if (Distance(src,des) > 2.8 && Distance(src,des) < 2.9){
-						//是否未压象脚
-						if (MyPieces[(des.y + src.y)/2][(des.x + src.x)/2] == null){
-							//输出走子信息
-							ChineseChessMainFrame.InfBoard.AddLog("象" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") +StrPos[0][des.x] ) ;
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			case '相':
-				//判断是否没过河
-				if (des.y >= 5 ){
-					//判断是否斜走2格
-					if (Distance(src,des) > 2.8 && Distance(src,des) < 2.9){
-						//是否未压象脚
-						if (MyPieces[(des.y + src.y)/2][(des.x + src.x)/2] == null){
-							//输出走子信息
-							ChineseChessMainFrame.InfBoard.AddLog("相" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ) ;
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			case '马':
-				//判断是否走2根号5格
-				if (Distance(src,des) > 2.2 && Distance(src,des) < 2.3){
-					//判断是否压马脚
-					if (Math.abs(src.x - des.x) == 1){
-						if (MyPieces[(src.y+des.y)/2][src.x] == null){
-							if (MyPieces[src.y][src.x].name.charAt(0) == '黑' ){
-								//输出走子信息
-								ChineseChessMainFrame.InfBoard.AddLog("马" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") +StrPos[0][des.x] ) ;
-							}
-							else{
-								//输出走子信息
-								ChineseChessMainFrame.InfBoard.AddLog("马" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ) ;
-							}
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-					else{
-						if (MyPieces[src.y][(src.x+des.x)/2] == null){
-							if (MyPieces[src.y][src.x].name.charAt(0) == '黑' ){
-								//输出走子信息
-								ChineseChessMainFrame.InfBoard.AddLog("马" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") +StrPos[0][des.x] ) ;
-							}
-							else{
-								//输出走子信息
-								ChineseChessMainFrame.InfBoard.AddLog("马" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ) ;
-							}
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-				}
-				else{
-					return false;
-				}
-			case '车':
-				if (src.y == des.y || src.x == des.x){
-					//直线上没有棋子挡住
-					if (IsBlock(src,des) == 0){
-						if (MyPieces[src.y][src.x].name.charAt(0) == '红' ){
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("车" + StrPos[1][src.x] + "平" + StrPos[1][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("车" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + Math.abs(des.y - src.y)) ;
-							}
-						}
-						else{
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("车" + StrPos[0][src.x] + "平" + StrPos[0][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("车" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + Math.abs(des.y - src.y)) ;
-							}
-						}
-						
-						MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-						MyPieces[src.y][src.x] = null; 
-						return true;
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			case '炮':
-				if (src.y == des.y || src.x == des.x){
-					//直线上没有棋子挡住
-					if (IsBlock(src,des) == 0){
-						if (MyPieces[src.y][src.x].name.charAt(0) == '红' ){
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[1][src.x] + "平" + StrPos[1][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + Math.abs(des.y - src.y)) ;
-							}
-						}
-						else{
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[0][src.x] + "平" + StrPos[0][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + Math.abs(des.y - src.y)) ;
-							}
-						}
-						MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-						MyPieces[src.y][src.x] = null; 
-						return true;
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			case '卒':
-				//勇往直前
-				if (des.y >= src.y){
-					//过河
-					if (des.y >= 5){
-						if (Distance(src,des) == 1){
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("卒" + StrPos[0][src.x] + "平" + StrPos[0][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("卒" + StrPos[0][src.x] +"进" + 1) ;
-							}
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-					else{
-						if (des.x == src.x && Math.abs(des.y - src.y) == 1){
-							ChineseChessMainFrame.InfBoard.AddLog("卒" + StrPos[0][src.x] + "进" + 1) ;
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-				}
-				else{
-					return false;
-				}
-			case '兵':
-				//勇往直前
-				if (des.y <= src.y){
-					//过河
-					if (des.y <= 4){
-						if (Distance(src,des) == 1){
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("兵" + StrPos[1][src.x] + "平" + StrPos[1][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("兵" + StrPos[1][src.x] +"进" + 1) ;
-							}
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-					else{
-						if (des.x == src.x && Math.abs(des.y - src.y) == 1){
-							ChineseChessMainFrame.InfBoard.AddLog("兵" + StrPos[1][src.x] + "进" + 1) ;
-							MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-							MyPieces[src.y][src.x] = null; 
-							return true;
-						}
-						else{
-							return false;
-						}
-					}
-				}
-				else{
-					return false;
-				}
-			}
-		}
 		
-		return true;
 	}
 	
 	/**
@@ -429,52 +128,17 @@ public class ChessBoarder {
 	 * @author 孔胤栋
 	 * 时间：20141118
 	 */
-	public boolean PieceEat(Point src,Point des){
-		if (MyPieces[src.y][src.x] == null){
-			//源位置没有棋子，吃子失败
-			return false;
+	public boolean PieceEat(Point src,Point des) {
+		if (canEat(src, des)) {
+			System.out.println("Can eat, over.");
+			MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
+			MyPieces[src.y][src.x] = null;
+			System.out.println("" + MyPieces[des.y][des.x] == null);
+			return true;
+		} else {
+			// 不可以吃，那么返回false 
+			return false;	
 		}
-		else{
-			//有棋子
-			switch(MyPieces[src.y][src.x].name.charAt(1)){
-			//炮特殊处理
-			case '炮':
-				if (src.y == des.y || src.x == des.x){
-					//直线上只有一个棋子挡住
-					if (IsBlock(src,des) == 1){
-						if (MyPieces[src.y][src.x].name.charAt(0) == '红' ){
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[1][src.x] + "平" + StrPos[1][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + Math.abs(des.y - src.y)) ;
-							}
-						}
-						else{
-							if (src.y == des.y){
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[0][src.x] + "平" + StrPos[0][des.x]);
-							}
-							else{
-								ChineseChessMainFrame.InfBoard.AddLog("炮" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + Math.abs(des.y - src.y)) ;
-							}
-						}
-						MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-						MyPieces[src.y][src.x] = null; 
-						return true;
-					}
-					else{
-						return false;
-					}
-				}
-				else{
-					return false;
-				}
-			default:
-				 return PieceMove(src,des);
-			}
-		}
-		//MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
-		//MyPieces[src.y][src.x] = null;
 	}
 	
 	/**
@@ -587,7 +251,353 @@ public class ChessBoarder {
 			System.out.println(TempC);
 			return TempC;
 		}
-		
 		return '无';
+	}
+	
+	public boolean canEat(Point src, Point des) {
+		if (! (des.x >= 0 && des.x <= 8 && des.y >= 0 && des.y <= 9)) {
+			// 测试如果走出棋盘，移动失败
+			return false;
+		} else if (MyPieces[src.y][src.x] == null){
+			// 源位置没有棋子，移动失败
+			return false;
+		} else if (MyPieces[des.y][des.x] == null) {
+			// 目标位置为空，应该是可移动里判断的
+			return false; 
+		} else if (MyPieces[des.y][des.x].name.charAt(0) == MyPieces[src.y][src.x].name.charAt(0)) {
+			// 目标位置的棋子和自己是一方的，那么不应该可以吃
+			return false;
+		} else if (MyPieces[src.y][src.x].name.charAt(1) == '炮') {
+			// 炮的特殊处理, 判断直线
+			if (src.y == des.y || src.x == des.x){
+				//直线上只有一个棋子挡住
+				if (IsBlock(src,des) == 1){
+					if (MyPieces[src.y][src.x].name.charAt(0) == '红'){
+						if (src.y == des.y){
+							informations = "炮" + StrPos[1][src.x] + "平" + StrPos[1][des.x];
+						} else {
+							informations = "炮" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + Math.abs(des.y - src.y);
+						}
+					} else {
+						if (src.y == des.y){
+							informations = "炮" + StrPos[0][src.x] + "平" + StrPos[0][des.x];
+						} else {
+							informations = "炮" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + Math.abs(des.y - src.y);
+						} 
+					}
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				// 不在同一直线上
+				return false;
+			}
+		} else {
+			return moveIsLegal(src, des);
+		}
+	}
+	
+	public boolean canMove(Point src, Point des) {
+		if (!moveIsLegal(src, des)) {
+			return false;
+		} else if (MyPieces[des.y][des.x] != null) {
+			// 目标位置有棋子，应该放在canEat里判断
+			return false;
+		} else {
+			// 除此以外，只需判断走步是否合法
+			return true;
+		}
+	}
+	
+	public boolean moveIsLegal(Point src, Point des) {
+		if (! (des.x >= 0 && des.x <= 8 && des.y >= 0 && des.y <= 9)) {
+			// 测试如果走出棋盘，移动失败
+			return false;
+		} else if (MyPieces[src.y][src.x] == null){
+			// 源位置没有棋子，移动失败
+			return false;
+		} else {
+			//有棋子
+			switch(MyPieces[src.y][src.x].name.charAt(1)){
+			case '将':
+				//判断是否在九宫内
+				if (des.x >= 3 && des.x <= 5 && des.y >= 0 && des.y <= 2){
+					if (Distance(src,des) == 1){
+						//行走步数为1步
+						//输出走子信息
+						if (src.y == des.y){
+							informations = "将" + StrPos[0][src.x] + "平" + StrPos[0][des.x];
+						}
+						else{
+							informations = "将" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + 1;
+						}
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			case '帅':
+				//判断是否在九宫内
+				if (des.x >= 3 && des.x <= 5 && des.y >= 7 && des.y <= 9){
+					if (Distance(src,des) == 1){
+						//行走步数为1步
+						//输出走子信息
+						if (src.y == des.y){
+							informations = "帅" + StrPos[1][src.x] + "平" + StrPos[1][des.x];
+						}
+						else{
+							informations = "帅" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + 1;
+						}
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+				else{
+					return false;
+				}
+			case '士':
+				//判断是否是红方
+				if (MyPieces[src.y][src.x].name.charAt(0) == '红'){
+					//判断是否在九宫内
+					if (des.x >= 3 && des.x <= 5 && des.y >= 7 && des.y <= 9){
+						//判断是否是斜着走
+						if (Distance(src,des) > 1.4 && Distance(src,des) < 1.5){
+							//输出走子信息
+							informations = "士" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ;
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+					else{
+						return false;
+					}
+				}
+				else{
+					//判断是否在九宫内
+					if (des.x >= 3 && des.x <= 5 && des.y >= 0 && des.y <= 2){
+						//判断是否是斜着走
+						if (Distance(src,des) > 1.4 && Distance(src,des) < 1.5){
+							//输出走子信息
+							informations = "士" + StrPos[1][src.x] + (des.y > src.y ? "进" : "退") +StrPos[1][des.x] ;
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+				}
+			case '象':
+				//判断是否没过河
+				if (des.y <= 4 ){
+					//判断是否斜走2格
+					if (Distance(src,des) > 2.8 && Distance(src,des) < 2.9){
+						//是否未压象脚
+						if (MyPieces[(des.y + src.y)/2][(des.x + src.x)/2] == null){
+							//输出走子信息
+							informations = "象" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") +StrPos[0][des.x] ;
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+					else{
+						return false;
+					}
+				}
+				else{
+					return false;
+				}
+			case '相':
+				//判断是否没过河
+				if (des.y >= 5 ){
+					//判断是否斜走2格
+					if (Distance(src,des) > 2.8 && Distance(src,des) < 2.9){
+						//是否未压象脚
+						if (MyPieces[(des.y + src.y)/2][(des.x + src.x)/2] == null){
+							//输出走子信息
+							informations = "相" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ;
+							return true;
+						}
+					}
+					else{
+						return false;
+					}
+				}
+				else{
+					return false;
+				}
+			case '马':
+				//判断是否走2根号5格
+				if (Distance(src,des) > 2.2 && Distance(src,des) < 2.3){
+					//判断是否压马脚
+					if (Math.abs(src.x - des.x) == 1){
+						System.out.println("" + src.y + " " + des.y + " " + src.x);
+						if (MyPieces[(src.y+des.y)/2][src.x] == null){
+							if (MyPieces[src.y][src.x].name.charAt(0) == '黑' ){
+								//输出走子信息
+								informations = "马" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") +StrPos[0][des.x] ;
+							}
+							else{
+								//输出走子信息
+								informations = "马" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ;
+							}
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+					else{
+						if (MyPieces[src.y][(src.x+des.x)/2] == null){
+							if (MyPieces[src.y][src.x].name.charAt(0) == '黑' ){
+								//输出走子信息
+								informations = "马" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") +StrPos[0][des.x] ;
+							}
+							else{
+								//输出走子信息
+								informations = "马" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") +StrPos[1][des.x] ;
+							}
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+				}
+				else{
+					return false;
+				}
+			case '车':
+				if (src.y == des.y || src.x == des.x){
+					//直线上没有棋子挡住
+					if (IsBlock(src,des) == 0){
+						if (MyPieces[src.y][src.x].name.charAt(0) == '红' ){
+							if (src.y == des.y){
+								informations = "车" + StrPos[1][src.x] + "平" + StrPos[1][des.x];
+							}
+							else{
+								informations = "车" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + Math.abs(des.y - src.y);
+							}
+						}
+						else{
+							if (src.y == des.y){
+								informations = "车" + StrPos[0][src.x] + "平" + StrPos[0][des.x];
+							}
+							else{
+								informations = "车" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + Math.abs(des.y - src.y);
+							}
+						}
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+				else{
+					return false;
+				}
+			case '炮':
+				if (src.y == des.y || src.x == des.x){
+					//直线上没有棋子挡住
+					if (IsBlock(src,des) == 0){
+						if (MyPieces[src.y][src.x].name.charAt(0) == '红' ){
+							if (src.y == des.y){
+								informations = "炮" + StrPos[1][src.x] + "平" + StrPos[1][des.x];
+							}
+							else{
+								informations = "炮" + StrPos[1][src.x] + (des.y < src.y ? "进" : "退") + Math.abs(des.y - src.y);
+							}
+						}
+						else{
+							if (src.y == des.y){
+								informations = "炮" + StrPos[0][src.x] + "平" + StrPos[0][des.x];
+							}
+							else{
+								informations = "炮" + StrPos[0][src.x] + (des.y > src.y ? "进" : "退") + Math.abs(des.y - src.y);
+							}
+						}
+						return true;
+					}
+					else{
+						return false;
+					}
+				}
+				else{
+					return false;
+				}
+			case '卒':
+				//勇往直前
+				if (des.y >= src.y){
+					//过河
+					if (des.y >= 5){
+						if (Distance(src,des) == 1){
+							if (src.y == des.y){
+								informations = "卒" + StrPos[0][src.x] + "平" + StrPos[0][des.x];
+							}
+							else{
+								informations = "卒" + StrPos[0][src.x] +"进" + 1;
+							}
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+					else{
+						if (des.x == src.x && Math.abs(des.y - src.y) == 1){
+							informations = "卒" + StrPos[0][src.x] + "进" + 1;
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+				}
+				else{
+					return false;
+				}
+			case '兵':
+				//勇往直前
+				if (des.y <= src.y){
+					//过河
+					if (des.y <= 4){
+						if (Distance(src,des) == 1){
+							if (src.y == des.y){
+								informations = "兵" + StrPos[1][src.x] + "平" + StrPos[1][des.x];
+							}
+							else{
+								informations = "兵" + StrPos[1][src.x] +"进" + 1;
+							}
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+					else{
+						if (des.x == src.x && Math.abs(des.y - src.y) == 1){
+							informations = "兵" + StrPos[1][src.x] + "进" + 1;
+							return true;
+						}
+						else{
+							return false;
+						}
+					}
+				}
+				else{
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 }

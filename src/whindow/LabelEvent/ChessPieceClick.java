@@ -9,7 +9,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import AI.AIController;
 import Audio.MP3;
+import chessBoard.ChessPieces;
 import defultSet.DefultSet;
 import whindow.ChessBoarderCanvas;
 import whindow.ChineseChessMainFrame;
@@ -22,8 +24,8 @@ import whindow.ChineseChessMainFrame;
 public class ChessPieceClick extends MouseAdapter {
 	@Override
 	public void mouseClicked(MouseEvent arg0){
-		MP3 DoPieceSound = new MP3(ChineseChessMainFrame.class.getResource("/music/dopiece.wav").getPath().substring(1),false);
-		MP3 WinSound = new MP3(ChineseChessMainFrame.class.getResource("/music/win.wav").getPath().substring(1),false);
+//		MP3 DoPieceSound = new MP3(ChineseChessMainFrame.class.getResource("/music/dopiece.wav").getPath().substring(1),false);
+//		MP3 WinSound = new MP3(ChineseChessMainFrame.class.getResource("/music/win.wav").getPath().substring(1),false);
 		int x,y;
 		x = arg0.getX();
 		y = arg0.getY();
@@ -65,17 +67,18 @@ public class ChessPieceClick extends MouseAdapter {
 							System.out.println("第二次选中为空");
 							ChineseChessMainFrame.MyBoarder.p2 = new Point(x,y);
 							if (ChineseChessMainFrame.MyBoarder.PieceMove(ChineseChessMainFrame.MyBoarder.p1, ChineseChessMainFrame.MyBoarder.p2) == true){
+								ChineseChessMainFrame.InfBoard.AddLog(ChineseChessMainFrame.MyBoarder.informations);
 								//棋子可以移动
-								DoPieceSound.play();
+//								DoPieceSound.play();
 								System.out.println("棋子可以移动");
 								char Winner = ChineseChessMainFrame.MyBoarder.Winner();
 								if (Winner == '红'){
-									WinSound.play();
+//									WinSound.play();
 									((ChessBoarderCanvas)arg0.getSource()).SendWinner('红');
 									ChineseChessMainFrame.InfBoard.AddLog("红方获得胜利!");
 								}
 								else if (Winner == '黑'){
-									WinSound.play();
+//									WinSound.play();
 									((ChessBoarderCanvas)arg0.getSource()).SendWinner('黑');
 									ChineseChessMainFrame.InfBoard.AddLog("黑方获得胜利!");
 								}
@@ -84,7 +87,6 @@ public class ChessPieceClick extends MouseAdapter {
 									ChineseChessMainFrame.MyBoarder.p2 = null;
 									SwitchDoPlayer();
 								}
-								
 							}
 							else{
 								//棋子不能移动
@@ -107,16 +109,17 @@ public class ChessPieceClick extends MouseAdapter {
 								ChineseChessMainFrame.MyBoarder.p2 = new Point(x,y);
 								if (ChineseChessMainFrame.MyBoarder.PieceEat(ChineseChessMainFrame.MyBoarder.p1, ChineseChessMainFrame.MyBoarder.p2) == true){
 									//棋子可以吃
-									DoPieceSound.play();
+//									DoPieceSound.play();
+									ChineseChessMainFrame.InfBoard.AddLog(ChineseChessMainFrame.MyBoarder.informations);
 									System.out.println("棋子可以吃");
 									char Winner = ChineseChessMainFrame.MyBoarder.Winner();
 									if (Winner == '红'){
-										WinSound.play();
+//										WinSound.play();
 										((ChessBoarderCanvas)arg0.getSource()).SendWinner('红');
 										ChineseChessMainFrame.InfBoard.AddLog("红方获得胜利!");
 									}
 									else if (Winner == '黑'){
-										WinSound.play();
+//										WinSound.play();
 										((ChessBoarderCanvas)arg0.getSource()).SendWinner('黑');
 										ChineseChessMainFrame.InfBoard.AddLog("黑方获得胜利!");
 									}
@@ -142,19 +145,28 @@ public class ChessPieceClick extends MouseAdapter {
 		((ChessBoarderCanvas)arg0.getSource()).paintImmediately(0, 0, ((ChessBoarderCanvas)arg0.getSource()).getWidth(), ((ChessBoarderCanvas)arg0.getSource()).getHeight());
 		System.out.println("repaint done");
 	}
-	
+
 	/**
-	 * 交换棋子执行方
-	 * @author 唐伟峰
-	 * 时间：20141121
+	 * 
+	 * Change the holder.
+	 * Modify the method to add AI controller.
+	 * 
+	 * @author Gongzq5
+	 * 
 	 */
 	static public void SwitchDoPlayer(){
 		if (ChineseChessMainFrame.DoPlayer == '红'){
 			ChineseChessMainFrame.DoPlayer = '黑';
 			ChineseChessMainFrame.InfBoard.AddLog("黑方执子");
 			System.out.println("轮到黑方");
+			
+			// to do, add our AI control
+			// 新建一个AIController, 交给他去控制局面
+			
+			AIController aiController = new AIController();
+			aiController.play();
 		}
-		else if (ChineseChessMainFrame.DoPlayer == '黑'){
+		if (ChineseChessMainFrame.DoPlayer == '黑'){
 			ChineseChessMainFrame.DoPlayer = '红';
 			ChineseChessMainFrame.InfBoard.AddLog("红方执子");
 			System.out.println("轮到红方");

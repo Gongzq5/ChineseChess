@@ -95,13 +95,13 @@ public class ChineseChessMainFrame extends JFrame {
 		this.getLayeredPane().add(BackGround, new Integer(Integer.MIN_VALUE)); 
 		
 		//添加作者信息
-		JLabel AuthorInf = new JLabel("");
-		AuthorInf.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ChineseChessMainFrame.class.getResource("/imageLibary/information.png"))));
-		//设置作者信息位置
-		AuthorInf.setBounds(30, 500,
-				new ImageIcon(ChineseChessMainFrame.class.getResource("/imageLibary/information.png")).getIconWidth(), 
-				new ImageIcon(ChineseChessMainFrame.class.getResource("/imageLibary/information.png")).getIconHeight());
-		contentPane.add(AuthorInf);
+//		JLabel AuthorInf = new JLabel("");
+//		AuthorInf.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(ChineseChessMainFrame.class.getResource("/imageLibary/information.png"))));
+//		//设置作者信息位置
+//		AuthorInf.setBounds(30, 500,
+//				new ImageIcon(ChineseChessMainFrame.class.getResource("/imageLibary/information.png")).getIconWidth(), 
+//				new ImageIcon(ChineseChessMainFrame.class.getResource("/imageLibary/information.png")).getIconHeight());
+//		contentPane.add(AuthorInf);
 		
 		//添加4个按钮
 		JLabel Menu1 = new JLabel("");
