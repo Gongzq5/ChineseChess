@@ -21,7 +21,7 @@ public class AlphaBetaNode {
 	}
 
 	public Integer getValue() {
-		if (value == null) value = estimateSelf('b');
+		if (value == null) value = estimateSelf();
 		return value;
 	}
 	
@@ -31,7 +31,7 @@ public class AlphaBetaNode {
 		return nextSteps;
 	}
 	
-	public int estimateSelf(char which) {
+	public int estimateSelf() {
 		int redValue = 0;
 		int blackValue = 0;
 		ChessPieces[][] map = chessBoarder.MyPieces;
@@ -47,7 +47,7 @@ public class AlphaBetaNode {
 				}
 			}
 		}
-		return which == 'r' ? redValue - blackValue : blackValue - redValue;
+		return blackValue - redValue;
 	}
 	
 	public void genrateAllPossibleNextSteps(char which) {
@@ -211,7 +211,7 @@ public class AlphaBetaNode {
 		genrateAllPossibleNextSteps(maxOrMin ? 'ºÚ' : 'ºì');
 		if (depth == 1) {
 			for (AlphaBetaNode nextStep : nextSteps) {
-				nextStep.value = nextStep.estimateSelf('b');	
+				nextStep.value = nextStep.estimateSelf();	
 			}
 		} else {
 			for (AlphaBetaNode nextStep : nextSteps) {

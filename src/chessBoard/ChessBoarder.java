@@ -133,7 +133,6 @@ public class ChessBoarder implements Cloneable {
 			System.out.println("Can eat, over.");
 			MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
 			MyPieces[src.y][src.x] = null;
-			System.out.println("" + MyPieces[des.y][des.x] == null);
 			return true;
 		} else {
 			// 不可以吃，那么返回false 
@@ -149,7 +148,7 @@ public class ChessBoarder implements Cloneable {
 	 * @author 孔胤栋
 	 */
 	public float Distance(Point a,Point b){
-		System.out.println((float)Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)));
+//		System.out.println((float)Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)));
 		return (float)Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	}
 	
@@ -439,7 +438,6 @@ public class ChessBoarder implements Cloneable {
 				if (Distance(src,des) > 2.2 && Distance(src,des) < 2.3){
 					//判断是否压马脚
 					if (Math.abs(src.x - des.x) == 1){
-						System.out.println("" + src.y + " " + des.y + " " + src.x);
 						if (MyPieces[(src.y+des.y)/2][src.x] == null){
 							if (MyPieces[src.y][src.x].name.charAt(0) == '黑' ){
 								//输出走子信息

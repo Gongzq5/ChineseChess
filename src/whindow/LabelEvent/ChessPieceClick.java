@@ -82,6 +82,10 @@ public class ChessPieceClick extends MouseAdapter {
 									// to do, add our AI control
 									// 新建一个AIController, 交给他去控制局面
 									if (ChineseChessMainFrame.DoPlayer == '黑') {
+										((ChessBoarderCanvas)arg0.getSource()).repaint();
+										((ChessBoarderCanvas)arg0.getSource()).paintImmediately(0, 0, ((ChessBoarderCanvas)arg0.getSource()).getWidth(), ((ChessBoarderCanvas)arg0.getSource()).getHeight());
+										System.out.println("repaint done");
+										
 										AIController aiController = new AIController();
 										aiController.play();
 										Winner = ChineseChessMainFrame.MyBoarder.Winner();
@@ -137,6 +141,11 @@ public class ChessPieceClick extends MouseAdapter {
 										ChineseChessMainFrame.MyBoarder.p2 = null;
 										SwitchDoPlayer();
 										if (ChineseChessMainFrame.DoPlayer == '黑') {
+											
+											((ChessBoarderCanvas)arg0.getSource()).repaint();
+											((ChessBoarderCanvas)arg0.getSource()).paintImmediately(0, 0, ((ChessBoarderCanvas)arg0.getSource()).getWidth(), ((ChessBoarderCanvas)arg0.getSource()).getHeight());
+											System.out.println("repaint done");
+											
 											AIController aiController = new AIController();
 											aiController.play();
 											Winner = ChineseChessMainFrame.MyBoarder.Winner();

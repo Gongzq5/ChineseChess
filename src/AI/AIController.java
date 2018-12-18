@@ -11,24 +11,25 @@ public class AIController {
 	public void play() {
 		final AlphaBetaNode currNode = new AlphaBetaNode(ChineseChessMainFrame.MyBoarder);
 		System.out.println("AI Play.");
-		currNode.minMaxSearch(2, true);
-		int maxValue = -65536;
-		AlphaBetaNode maxNextNode = null;
-		List<AlphaBetaNode> nextSteps = currNode.getNextSteps('黑');
-		for (AlphaBetaNode nextStep : nextSteps) {
-			if (maxValue < nextStep.getValue()) {
-				maxValue = nextStep.getValue();
-				maxNextNode = nextStep;
-			}
-		}
+		AlphaBetaNode maxNextNode = minMaxSearch(currNode, 2);
 		ChineseChessMainFrame.MyBoarder = maxNextNode.chessBoarder;
 		ChineseChessMainFrame.InfBoard.AddLog(maxNextNode.chessBoarder.informations);
 		System.out.println("AI Over.");
 	}
 	
 	public AlphaBetaNode minMaxSearch(AlphaBetaNode start, int depth) {
+		// 首层，必定是取极大
 		start.minMaxSearch(depth, true);
-		return start;
+		int maxValue = -65536;
+		AlphaBetaNode maxNextNode = null;
+		List<AlphaBetaNode> nextSteps = start.getNextSteps('黑');
+		for (AlphaBetaNode nextStep : nextSteps) {
+			if (maxValue < nextStep.getValue()) {
+				maxValue = nextStep.getValue();
+				maxNextNode = nextStep;
+			}
+		}
+		return maxNextNode;
 	}
 
 //	public int alphaBetaSearch(int alpha, int beta, int depth) {
