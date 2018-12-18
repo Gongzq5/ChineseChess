@@ -11,8 +11,11 @@ public class AlphaBetaNode {
 	
 	public ChessBoarder chessBoarder = null;
 	
+	private AlphaBetaNode prev = null;
+	private Boolean maxOrMin = null;
 	private Integer value = null;
 	private List<AlphaBetaNode> nextSteps = null;
+	private int currBound = 0;
 	
 	public AlphaBetaNode(ChessBoarder chessBoarder) {
 		this.chessBoarder = chessBoarder;
@@ -203,11 +206,17 @@ public class AlphaBetaNode {
                 }
             }
         }
+        for (AlphaBetaNode nextStep : nextSteps) {
+        	nextStep.prev = this;
+        	nextStep.maxOrMin = !maxOrMin;
+        }
     }
 
 	
 	public int minMaxSearch(int depth, boolean maxOrMin) {
-		int re = maxOrMin ? -65536 : 65535;
+		this.maxOrMin = maxOrMin;
+		currBound = maxOrMin ? -65536 : 65535;
+		int re = currBound;
 		genrateAllPossibleNextSteps(maxOrMin ? '黑' : '红');
 		if (depth == 1) {
 			for (AlphaBetaNode nextStep : nextSteps) {
@@ -226,4 +235,63 @@ public class AlphaBetaNode {
 		return re;
 	}
 	
+	public int alphaBetaSearch(boolean maxOrMin, int depth) {
+		this.maxOrMin = maxOrMin;
+		currBound = maxOrMin ? -65536 : 65535;
+		genrateAllPossibleNextSteps(maxOrMin ? '黑' : '红');
+		if (depth == 1) {
+			// 倒数第二层了，让下层端节点根据局面估计自己
+			for (AlphaBetaNode nextStep : nextSteps) {
+				nextStep.value = nextStep.estimateSelf();	
+				if (maxOrMin ? (nextStep.getValue() > currBound) : (nextStep.getValue() < currBound)) {
+					currBound = nextStep.getValue();
+				}
+			}
+			// re拿到了最后一层的结果
+			this.backpatch(currBound);
+		} else {
+			// 非端节点，需要根据反馈
+			for (AlphaBetaNode nextStep : nextSteps) {
+				nextStep.value = nextStep.alphaBetaSearch(!maxOrMin, depth-1);	
+				if (!backpatch(nextStep.value)) {
+					break;
+				}
+			}
+		}
+		return currBound;
+	}
+	
+	public boolean backpatch(int value) {
+
+		boolean re = false;
+		if (maxOrMin) {
+			// 求最大，即当前的评估>=currBound
+			// 下层节点是求最小的，所以下层的评估<=value
+			if (currBound >= value) {
+				// 此时说明拿到的没用，剪枝掉下边的部分
+				re = false;
+			} else {
+				// 更新当前bound，并且继续进行下层的评估
+				currBound = value;
+				re = true;
+			}
+		} else {
+			// 求最小，即当前的评估<=currBound
+			// 下层节点是求最大的，所以下层的评估>=value
+			if (currBound <= value) {
+				// 此时说明拿到的没用，剪枝掉下边的部分
+				re = false;
+			} else {
+				// 更新当前bound，并且继续进行下层的评估
+				currBound = value;
+				re = true;
+			}
+		}
+		
+		if (prev != null) {
+			prev.backpatch(currBound);
+		}
+		
+		return re;
+	}
 }

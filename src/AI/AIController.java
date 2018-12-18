@@ -11,7 +11,8 @@ public class AIController {
 	public void play() {
 		final AlphaBetaNode currNode = new AlphaBetaNode(ChineseChessMainFrame.MyBoarder);
 		System.out.println("AI Play.");
-		AlphaBetaNode maxNextNode = minMaxSearch(currNode, 2);
+//		AlphaBetaNode maxNextNode = minMaxSearch(currNode, 2);
+		AlphaBetaNode maxNextNode = alphaBetaSearch(currNode, 10);
 		ChineseChessMainFrame.MyBoarder = maxNextNode.chessBoarder;
 		ChineseChessMainFrame.InfBoard.AddLog(maxNextNode.chessBoarder.informations);
 		System.out.println("AI Over.");
@@ -32,18 +33,17 @@ public class AIController {
 		return maxNextNode;
 	}
 
-//	public int alphaBetaSearch(int alpha, int beta, int depth) {
-//		if (depth == 0) {
-//			return estimate();
-//		}
-//		
-//		List<ChessBoarder> nextSteps = new LinkedList<>();
-//		for (ChessBoarder nextStep : nextSteps) {
-//			// get a step from tree
-//			int value = -alphaBetaSearch(-beta, -alpha, depth-1);
-//		}
-//		
-//		return 0;
-//	}
-
+	public AlphaBetaNode alphaBetaSearch(AlphaBetaNode start, int depth) {
+		start.alphaBetaSearch(true, depth);
+		int maxValue = -65536;
+		AlphaBetaNode maxNextNode = null;
+		List<AlphaBetaNode> nextSteps = start.getNextSteps('ºÚ');
+		for (AlphaBetaNode nextStep : nextSteps) {
+			if (maxValue < nextStep.getValue()) {
+				maxValue = nextStep.getValue();
+				maxNextNode = nextStep;
+			}
+		}
+		return maxNextNode; 
+	}
 }
