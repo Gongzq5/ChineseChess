@@ -3,8 +3,6 @@ package whindow;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 
 import javax.swing.JPanel;
 
@@ -12,6 +10,10 @@ import chessBoard.ChessBoarder;
 import defultSet.DefultSet;
 
 public class ChessBoarderCanvas extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	ChessBoarder MyChessBoarder;
 	//CanvasµÄ±³¾°Í¼Æ¬
 	Image BgImage;
@@ -56,8 +58,6 @@ public class ChessBoarderCanvas extends JPanel{
 	 */
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		//test
-		System.out.println("Canvas paint done");
 		
 		//BufferedImage BImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		//Graphics g = BImage.getGraphics();

@@ -68,11 +68,13 @@ public class ChessPieceClick extends MouseAdapter {
 								if (Winner == '红'){
 //									WinSound.play();
 									((ChessBoarderCanvas)arg0.getSource()).SendWinner('红');
+									ChineseChessMainFrame.DoPlayer = '无';
 									ChineseChessMainFrame.InfBoard.AddLog("红方获得胜利!");
 								}
 								else if (Winner == '黑'){
 //									WinSound.play();
 									((ChessBoarderCanvas)arg0.getSource()).SendWinner('黑');
+									ChineseChessMainFrame.DoPlayer = '无';
 									ChineseChessMainFrame.InfBoard.AddLog("黑方获得胜利!");
 								}
 								else{
@@ -84,17 +86,18 @@ public class ChessPieceClick extends MouseAdapter {
 									if (ChineseChessMainFrame.DoPlayer == '黑') {
 										((ChessBoarderCanvas)arg0.getSource()).repaint();
 										((ChessBoarderCanvas)arg0.getSource()).paintImmediately(0, 0, ((ChessBoarderCanvas)arg0.getSource()).getWidth(), ((ChessBoarderCanvas)arg0.getSource()).getHeight());
-										System.out.println("repaint done");
 										
 										AIController aiController = new AIController();
 										aiController.play();
 										Winner = ChineseChessMainFrame.MyBoarder.Winner();
 										if (Winner == '红') {
 											((ChessBoarderCanvas)arg0.getSource()).SendWinner('红');
+											ChineseChessMainFrame.DoPlayer = '无';
 											ChineseChessMainFrame.InfBoard.AddLog("红方获得胜利!");
 										}
 										else if (Winner == '黑') {
 											((ChessBoarderCanvas)arg0.getSource()).SendWinner('黑');
+											ChineseChessMainFrame.DoPlayer = '无';
 											ChineseChessMainFrame.InfBoard.AddLog("黑方获得胜利!");
 										}
 										SwitchDoPlayer();	
@@ -129,11 +132,13 @@ public class ChessPieceClick extends MouseAdapter {
 									if (Winner == '红'){
 //										WinSound.play();
 										((ChessBoarderCanvas)arg0.getSource()).SendWinner('红');
+										ChineseChessMainFrame.DoPlayer = '无';
 										ChineseChessMainFrame.InfBoard.AddLog("红方获得胜利!");
 									}
 									else if (Winner == '黑'){
 //										WinSound.play();
 										((ChessBoarderCanvas)arg0.getSource()).SendWinner('黑');
+										ChineseChessMainFrame.DoPlayer = '无';
 										ChineseChessMainFrame.InfBoard.AddLog("黑方获得胜利!");
 									}
 									else{
@@ -144,17 +149,18 @@ public class ChessPieceClick extends MouseAdapter {
 											
 											((ChessBoarderCanvas)arg0.getSource()).repaint();
 											((ChessBoarderCanvas)arg0.getSource()).paintImmediately(0, 0, ((ChessBoarderCanvas)arg0.getSource()).getWidth(), ((ChessBoarderCanvas)arg0.getSource()).getHeight());
-											System.out.println("repaint done");
 											
 											AIController aiController = new AIController();
 											aiController.play();
 											Winner = ChineseChessMainFrame.MyBoarder.Winner();
 											if (Winner == '红') {
 												((ChessBoarderCanvas)arg0.getSource()).SendWinner('红');
+												ChineseChessMainFrame.DoPlayer = '无';
 												ChineseChessMainFrame.InfBoard.AddLog("红方获得胜利!");
 											}
 											else if (Winner == '黑') {
 												((ChessBoarderCanvas)arg0.getSource()).SendWinner('黑');
+												ChineseChessMainFrame.DoPlayer = '无';
 												ChineseChessMainFrame.InfBoard.AddLog("黑方获得胜利!");
 											}
 											SwitchDoPlayer();	
@@ -175,7 +181,7 @@ public class ChessPieceClick extends MouseAdapter {
 		}
 		((ChessBoarderCanvas)arg0.getSource()).repaint();
 		((ChessBoarderCanvas)arg0.getSource()).paintImmediately(0, 0, ((ChessBoarderCanvas)arg0.getSource()).getWidth(), ((ChessBoarderCanvas)arg0.getSource()).getHeight());
-		System.out.println("repaint done");
+		System.out.println("Red turn should, " + ChineseChessMainFrame.DoPlayer);
 	}
 
 	/**

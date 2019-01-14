@@ -117,7 +117,6 @@ public class ChessBoarder implements Cloneable {
 		} else {
 			return false;
 		}
-		
 	}
 	
 	/**
@@ -130,7 +129,6 @@ public class ChessBoarder implements Cloneable {
 	 */
 	public boolean PieceEat(Point src,Point des) {
 		if (canEat(src, des)) {
-			System.out.println("Can eat, over.");
 			MyPieces[des.y][des.x] = MyPieces[src.y][src.x];
 			MyPieces[src.y][src.x] = null;
 			return true;
@@ -215,7 +213,6 @@ public class ChessBoarder implements Cloneable {
 			}
 		}
 		if (!ExJ){
-			ChineseChessMainFrame.DoPlayer = '无';
 			return '红';
 		}
 		//判断帅是否存在
@@ -232,7 +229,6 @@ public class ChessBoarder implements Cloneable {
 			}
 		}
 		if (!ExS){
-			ChineseChessMainFrame.DoPlayer = '无';
 			return '黑';
 		}
 		//都存在
@@ -246,7 +242,6 @@ public class ChessBoarder implements Cloneable {
 			else if (TempC == '黑'){
 				TempC = '红';
 			}
-			ChineseChessMainFrame.DoPlayer = '无';
 			System.out.println(TempC);
 			return TempC;
 		}

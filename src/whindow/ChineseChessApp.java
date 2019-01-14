@@ -2,7 +2,6 @@ package whindow;
 
 import java.awt.EventQueue;
 
-import Audio.MP3;
 
 public class ChineseChessApp {
 	

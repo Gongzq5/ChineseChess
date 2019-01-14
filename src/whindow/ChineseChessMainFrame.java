@@ -1,15 +1,11 @@
 package whindow;
 
-import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Point;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import whindow.LabelEvent.ChessPieceClick;
@@ -19,10 +15,14 @@ import defultSet.DefultSet;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.ImageObserver;
 
 public class ChineseChessMainFrame extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6381038747365645992L;
+	
 	private JPanel contentPane;
 	private JPanel Pane1;
 	private JPanel Pane2;

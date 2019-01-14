@@ -3,7 +3,6 @@ package chessBoard;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-import javax.swing.ImageIcon;
 
 import whindow.ChineseChessMainFrame;
 
